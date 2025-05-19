@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Popup } from './popup';
-import { useData } from './providers';
 import { Card } from './card/Card';
+import { useSelector } from 'react-redux';
+import { Loader } from './common';
+import { StyledCardTitle } from './card/CardTitle';
 
 const defaultPopupSettings = {
   visible: false,
@@ -10,7 +12,9 @@ const defaultPopupSettings = {
 };
 
 export function ItemsGrid() {
-  const { characters } = useData();
+  const { characters, loading, error } = useSelector(
+    (state) => state.characters
+  );
   const [popupSettings, setPopupSettings] = useState(defaultPopupSettings);
 
   const cardOnClickHandler = useCallback(
@@ -23,9 +27,19 @@ export function ItemsGrid() {
     []
   );
 
-  if (!characters.length) {
-    return null;
-  }
+  if (loading) return <Loader />;
+  if (error)
+    return (
+      <StyledCardTitle style={{ color: 'white' }}>
+        No characters found
+      </StyledCardTitle>
+    );
+  if (!characters.length && !loading)
+    return (
+      <StyledCardTitle style={{ color: 'white' }}>
+        No characters found
+      </StyledCardTitle>
+    );
 
   return (
     <Container>

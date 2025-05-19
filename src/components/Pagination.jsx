@@ -1,37 +1,38 @@
 import styled from 'styled-components';
-import { useCallback, useEffect, useState } from 'react';
-import { useData } from './providers';
+import { useDispatch, useSelector } from 'react-redux';
+import { setActivePage, fetchCharacters } from '../slices/charactersSlice';
+import { useCallback } from 'react';
 
 export function Pagination() {
-  const [pages, setPages] = useState([]);
-  const { apiURL, info, activePage, setActivePage, setApiURL } = useData();
-
-  const pageClickHandler = useCallback(
-    (index) => () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setActivePage(index);
-      setApiURL(pages[index]);
-    },
-    [pages, setActivePage, setApiURL]
+  const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.characters);
+  const { info, activePage, filters } = useSelector(
+    (state) => state.characters
   );
 
-  useEffect(() => {
-    const createdPages = Array.from({ length: info.pages }, (_, i) => {
-      const URLWithPage = new URL(apiURL);
+  const pageClickHandler = useCallback(
+    (pageIndex) => () => {
+      dispatch(setActivePage(pageIndex));
+      // Формируем URL с текущими фильтрами и выбранной страницей
+      const url = new URL('https://rickandmortyapi.com/api/character/');
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) url.searchParams.set(key, value);
+      });
+      url.searchParams.set('page', pageIndex + 1);
+      dispatch(fetchCharacters(url.toString()));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [dispatch, filters]
+  );
 
-      URLWithPage.searchParams.set('page', i + 1);
+  if (error || !info.pages || info.pages <= 1) return null;
 
-      return URLWithPage;
-    });
-
-    setPages(createdPages);
-  }, [info, apiURL]);
-
-  if (pages.length <= 1) return null;
+  // Создаем массив номеров страниц
+  const pagesArray = Array.from({ length: info.pages }, (_, i) => i + 1);
 
   return (
     <StyledPagination>
-      {pages[activePage - 1] && (
+      {pagesArray[activePage - 1] && (
         <>
           {activePage - 1 !== 0 && (
             <>
@@ -46,16 +47,18 @@ export function Pagination() {
 
       <Page active>{activePage + 1}</Page>
 
-      {pages[activePage + 1] && (
+      {pagesArray[activePage + 1] && (
         <>
           <Page onClick={pageClickHandler(activePage + 1)}>
             {activePage + 2}
           </Page>
 
-          {activePage + 1 !== pages.length - 1 && (
+          {activePage + 1 !== pagesArray.length - 1 && (
             <>
               <Ellipsis>...</Ellipsis>
-              <Page onClick={pageClickHandler(pages.length)}>Last »</Page>
+              <Page onClick={pageClickHandler(pagesArray.length - 1)}>
+                Last »
+              </Page>
             </>
           )}
         </>
