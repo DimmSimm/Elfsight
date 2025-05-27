@@ -1,22 +1,16 @@
 import styled from 'styled-components';
-import { Pagination, ItemsGrid, useData, Header, AppState } from './components';
+import { Pagination, ItemsGrid, Header } from './components';
 
 export function App() {
-  const { isFetching, isError } = useData();
-
   return (
     <Main>
       <Header />
 
-      <AppState />
+      <>
+        <ItemsGrid />
 
-      {!isFetching && !isError && (
-        <>
-          <ItemsGrid />
-
-          <Pagination />
-        </>
-      )}
+        <Pagination />
+      </>
     </Main>
   );
 }
@@ -28,7 +22,7 @@ const Main = styled.main`
   gap: 30px;
   padding: 20px 0;
   max-width: 80%;
-  margin: 0 auto;
+  margin: auto;
 
   @media (max-width: 1200px) {
     max-width: 95%;

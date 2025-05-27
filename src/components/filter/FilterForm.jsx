@@ -37,8 +37,7 @@ export const FilterForm = () => {
 
   const selectOption = useCallback(
     (label, option) => () => {
-      const lowerCasedLabel = label.toLowerCase();
-      const newFilters = { ...filters, [lowerCasedLabel]: option };
+      const newFilters = { ...filters, [label]: option };
       setOpenMenu(null);
       dispatch(setFilters(newFilters));
     },
@@ -119,25 +118,25 @@ export const FilterForm = () => {
                 {!filters[lowerCasedLabel] ? (
                   <LabelContainer>
                     <span>{label}</span>
-                    <span
+                    <IconSpan
                       className={`fas ${
                         openMenu === label ? 'fa-chevron-up' : 'fa-chevron-down'
                       }`}
                     >
                       {' '}
-                    </span>
+                    </IconSpan>
                   </LabelContainer>
                 ) : (
                   <LabelContainer active>
                     <span>{filters[lowerCasedLabel]}</span>
-                    <span
+                    <IconSpan
                       className={`fas ${
                         openMenu === label ? 'fa-chevron-up' : 'fa-times'
                       }`}
                       onClick={createHandleResetIcon(lowerCasedLabel)}
                     >
                       {' '}
-                    </span>
+                    </IconSpan>
                   </LabelContainer>
                 )}
               </FilterButton>
@@ -148,7 +147,7 @@ export const FilterForm = () => {
                     style={{
                       fontWeight: !filters[lowerCasedLabel] ? 'bold' : 'normal'
                     }}
-                    onClick={selectOption(label, '')}
+                    onClick={selectOption(lowerCasedLabel, '')}
                   >
                     All
                   </LiMenuItem>
@@ -161,7 +160,7 @@ export const FilterForm = () => {
                             ? 'bold'
                             : 'normal'
                       }}
-                      onClick={selectOption(label, option)}
+                      onClick={selectOption(lowerCasedLabel, option)}
                     >
                       {option}
                     </LiMenuItem>
@@ -205,18 +204,21 @@ export const FilterForm = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 10px;
   user-select: none;
   gap: 10px;
-  width: 490px;
+
+  @media (max-width: 950px) {
+    margin-top: 30px;
+    gap: 15px;
+  }
 `;
 
 const UlFilter = styled.ul`
   position: absolute;
   top: calc(100% + 4px);
   left: 0px;
-  width: 150px;
-  max-height: 180px;
+  width: 180px;
+  max-height: 165px;
   overflow-y: auto;
   border: 2px solid #ccc;
   border-radius: 10px;
@@ -227,21 +229,32 @@ const UlFilter = styled.ul`
   list-style: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
+  @media (max-width: 950px) {
+    width: 150px;
+  }
+
   @media (max-width: 638px) {
     width: 240px;
   }
 `;
 const LiMenuItem = styled.li`
-  padding: 8px 12px;
+  padding: 6px 7px;
   cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 
   &:hover {
-    background-color: rgb(161 249 165);
+    background-color: #83bf4633;
   }
 `;
 const TopContentWrapper = styled.div`
   display: flex;
   gap: 10px;
+
+  @media (max-width: 950px) {
+    gap: 15px;
+  }
 
   @media (max-width: 638px) {
     flex-direction: column;
@@ -251,18 +264,25 @@ const TopContentWrapper = styled.div`
 
 const FilterButton = styled.button`
   display: flex;
-  padding: 8px 12px;
-  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 12px 16px;
   cursor: pointer;
   border-radius: 10px;
-  border: 2px solid #4caf50;
-  background-color: rgb(31 87 113);
-  width: 150px;
-  color: darkgray;
+  border: 2px solid #83bf46;
+  background-color: #263750;
+  width: 180px;
+  height: 40px;
+  color: #b3b3b3;
 
   &:hover {
-    background-color: rgb(109 181 187);
+    background-color: #334466;
     color: #fff;
+  }
+
+  @media (max-width: 950px) {
+    width: 150px;
   }
 
   @media (max-width: 638px) {
@@ -273,7 +293,7 @@ const FilterButton = styled.button`
 const LabelContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   width: 100%;
   ${({ active }) => active && 'color: #fff'};
 `;
@@ -281,6 +301,10 @@ const LabelContainer = styled.div`
 const BottomContentWrapper = styled.div`
   display: flex;
   gap: 10px;
+
+  @media (max-width: 950px) {
+    gap: 15px;
+  }
 
   @media (max-width: 638px) {
     flex-direction: column;
@@ -292,6 +316,10 @@ const TextInputsWrapper = styled.div`
   display: flex;
   gap: 10px;
 
+  @media (max-width: 950px) {
+    gap: 15px;
+  }
+
   @media (max-width: 638px) {
     flex-direction: column;
     align-items: center;
@@ -299,24 +327,31 @@ const TextInputsWrapper = styled.div`
 `;
 
 const Input = styled.input`
-  padding: 8px;
-  font-size: 14px;
+  padding: 12px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
   border-radius: 10px;
-  border: 2px solid #4caf50;
-  width: 150px;
-  background-color: rgb(31 87 113);
+  border: 2px solid #83bf46;
+  width: 180px;
+  height: 40px;
+  background-color: #263750;
   color: #fff;
 
   &:hover {
-    background-color: rgb(109 181 187);
+    background-color: #334466;
   }
 
   &::placeholder {
-    color: darkgray;
+    color: #b3b3b3;
   }
 
   &:hover::placeholder {
-    color: #fff;
+    color: #f5f5f5;
+  }
+
+  @media (max-width: 950px) {
+    width: 150px;
   }
 
   @media (max-width: 638px) {
@@ -327,34 +362,44 @@ const Input = styled.input`
 const BottomButtonsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 150px;
+  width: 180px;
+  gap: 10px;
+
+  @media (max-width: 950px) {
+    width: 150px;
+  }
 
   @media (max-width: 638px) {
     flex-direction: column;
     align-items: center;
     justify-content: none;
-    gap: 10px;
     width: 240px;
   }
 `;
 
 const ButtonApply = styled.button`
   display: flex;
-  padding: 9px 12px;
-  width: 150px;
-  max-width: 46%;
-  font-weight: bold;
-  border: 2px solid #4caf50;
+  padding: 12px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  width: 85px;
+  height: 40px;
+  border: 2px solid #83bf46;
   border-radius: 10px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  color: #4caf50;
+  color: #83bf46;
   background-color: #001832;
 
   &:hover {
     color: #fff;
-    background-color: #4caf50;
+    background-color: #83bf46;
+  }
+
+  @media (max-width: 950px) {
+    width: 70px;
   }
 
   @media (max-width: 638px) {
@@ -365,25 +410,38 @@ const ButtonApply = styled.button`
 
 const ButtonReset = styled.button`
   display: flex;
-  padding: 9px 12px;
-  width: 150px;
+  padding: 12px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  width: 85px;
+  height: 40px;
   max-width: 46%;
-  font-weight: bold;
-  border: 2px solid #f44336;
+  border: 2px solid #ff5152;
   border-radius: 10px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  color: #f44336;
+  color: #ff5152;
   background-color: #001832;
 
   &:hover {
     color: #fff;
-    background-color: #f44336;
+    background-color: #ff5152;
+  }
+
+  @media (max-width: 950px) {
+    width: 70px;
   }
 
   @media (max-width: 638px) {
     max-width: 100%;
     width: 240px;
+  }
+`;
+
+const IconSpan = styled.span`
+  &.fa-times:hover {
+    color: #83bf46;
   }
 `;

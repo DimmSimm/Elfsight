@@ -70,6 +70,7 @@ export function Pagination() {
 const StyledPagination = styled.div`
   width: 100%;
   text-align: center;
+  padding-bottom: 20px;
 `;
 
 const Page = styled.span`

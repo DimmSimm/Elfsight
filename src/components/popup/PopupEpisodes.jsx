@@ -73,7 +73,7 @@ const StyledPopupEpisodes = styled.div`
 
       & p {
         width: 95%;
-        border-bottom: 2px solid #eee;
+        border-bottom: 0.5px solid #334466;
       }
 
       & span {
@@ -88,7 +88,7 @@ const Episode = styled.p`
   width: 100%;
   display: grid;
   align-items: center;
-  padding: 10px 0;
+  padding: 30px 0;
 `;
 
 const EpisodeMarking = styled.span`
