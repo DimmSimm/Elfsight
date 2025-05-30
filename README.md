@@ -1,4 +1,4 @@
-# Elfsight Test Task (Rick and Morty API)
+#Rick and Morty API
 
 От Dima M
 
